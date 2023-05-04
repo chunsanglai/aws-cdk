@@ -1,8 +1,8 @@
-import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { CodeBuildStep, CodePipeline, CodePipelineSource } from 'aws-cdk-lib/pipelines';
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { PipelineStage } from "./cdk-pipeline-stage";
+import variables from '../../bin/load-dotenv';
 
 export class PipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -22,9 +22,21 @@ export class PipelineStack extends Stack {
             installCommands: ["npm install -g aws-cdk"],
             commands: ["npm ci", "npm run build", "npx cdk synth"]
         })
+
     });
 
-    const deploy = new PipelineStage(this, "Deploy");
-		pipeline.addStage(deploy);
+    if (variables.PROD_AWS_ACCOUNT_ID) {
+      const prodaccount = new PipelineStage(this, variables.PROD_AWS_ACCOUNT_STAGE, {
+        env: {
+          account: variables.PROD_AWS_ACCOUNT_ID,
+          region: variables.PROD_AWS_REGION,
+        },
+        stage: variables.PROD_AWS_ACCOUNT_STAGE,
+        stageShort: variables.PROD_AWS_ACCOUNT_STAGE_SHORT,
+        vpcCidr: variables.PROD_VPC_CIDR,
+      });
+
+		pipeline.addStage(prodaccount);
   }
+}
 }

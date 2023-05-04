@@ -13,10 +13,13 @@ export class VpcStack extends Stack {
   public readonly mySecurityGroup: SecurityGroup;
   constructor(scope: Construct, id: string, props?: VpcStackProps) {
     super(scope, id, props);
-
+    
+    if (!(props && props.vpcCidr)) {
+      throw new Error("Supply a valid VPC Cidr for the account that you're deploying the stack on!");
+    }
 
     this.vpc = new ec2.Vpc(this, 'skeletonVPC', {
-      ipAddresses: ec2.IpAddresses.cidr('10.0.0.0/16'),
+      cidr: props.vpcCidr,
       natGateways: 1,
       maxAzs: 3,
       subnetConfiguration: [

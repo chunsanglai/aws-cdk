@@ -22,18 +22,5 @@ export class R53Stack extends Stack {
     this.subzone = new route53.PublicHostedZone(this, 'subZone', {
       zoneName: `${props?.stageShort}.${variables.HOSTED_ZONE_NAME}`,
     });
-
-    const delegationRole = iam.Role.fromRoleArn(
-      this,
-      'DelegationRole',
-      `arn:aws:iam::${variables.PIPELINE_AWS_ACCOUNT_ID}:role/pipelineDelegationRole`,
-    );
-
-    // create the record
-    new route53.CrossAccountZoneDelegationRecord(this, 'delegate', {
-      delegatedZone: this.subzone,
-      parentHostedZoneName: `${variables.HOSTED_ZONE_NAME}`, // or you can use parentHostedZoneId
-      delegationRole,
-    });
   }
 }

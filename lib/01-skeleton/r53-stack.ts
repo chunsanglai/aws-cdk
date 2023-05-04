@@ -20,7 +20,7 @@ export class R53Stack extends Stack {
     super(scope, id, props);
 
     this.subzone = new route53.PublicHostedZone(this, 'subZone', {
-      zoneName: `${props?.stageShort}.${variables.HOSTED_ZONE_NAME}`,
+      zoneName: `${props?.stageShort}.${variables.CUSTOMER_NAME}`,
     });
   }
 }

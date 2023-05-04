@@ -25,8 +25,8 @@ export class PipelineStack extends Stack {
 
     });
 
-    if (variables.PROD_AWS_ACCOUNT_ID) {
-      const prodaccount = new PipelineStage(this, variables.PROD_AWS_ACCOUNT_STAGE, {
+    
+    const prodaccount = new PipelineStage(this, variables.PROD_AWS_ACCOUNT_STAGE, {
         env: {
           account: variables.PROD_AWS_ACCOUNT_ID,
           region: variables.PROD_AWS_REGION,
@@ -38,5 +38,4 @@ export class PipelineStack extends Stack {
 
 		pipeline.addStage(prodaccount);
   }
-}
 }

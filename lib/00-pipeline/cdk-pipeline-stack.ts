@@ -17,11 +17,11 @@ export class PipelineStack extends Stack {
                 variables.PIPELINE_BRANCH,
                 { connectionArn: variables.PIPELINE_CODESTAR_CONNECTION_ARN }
             ),
-            commands: ['yarn install --frozen-lockfile', 'npx projen build'],
+            commands: ['npm ci', 'npm run build', 'npx cdk synth'],
         })
     });
 
-    const production = new PipelineStage(this, 'production', {
+    const production = new PipelineStage(this, variables.PROD_AWS_ACCOUNT_STAGE, {
       stage: variables.PROD_AWS_ACCOUNT_STAGE,
       stageShort: variables.PROD_AWS_ACCOUNT_STAGE_SHORT,
       vpcCidr: variables.PROD_VPC_CIDR,

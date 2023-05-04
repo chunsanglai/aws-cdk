@@ -21,12 +21,13 @@ export class PipelineStack extends Stack {
         })
     });
 
-    const production = new PipelineStage(this, variables.PROD_AWS_ACCOUNT_STAGE, {
-      stage: variables.PROD_AWS_ACCOUNT_STAGE,
-      stageShort: variables.PROD_AWS_ACCOUNT_STAGE_SHORT,
-      vpcCidr: variables.PROD_VPC_CIDR,
-    });
-
-    cdkPipeline.addStage(production);
+    if (variables.PROD_AWS_ACCOUNT_ID) {
+      const production = new PipelineStage(this, variables.PROD_AWS_ACCOUNT_STAGE, {
+        stage: variables.PROD_AWS_ACCOUNT_STAGE,
+        stageShort: variables.PROD_AWS_ACCOUNT_STAGE_SHORT,
+        vpcCidr: variables.PROD_VPC_CIDR,
+      });
+      cdkPipeline.addStage(production);
+    }
   }
 }

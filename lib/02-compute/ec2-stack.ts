@@ -22,15 +22,15 @@ export class EC2Stack extends cdk.Stack {
         // Create a security group for the EC2 instance
         const mySG = new ec2.SecurityGroup(this, "SG", {
             vpc: importedVpc,
-            description: "Allow SSH access",
+            description: "Allow SSH access", // uncomment line 29 - 33 to add into this security group
             allowAllOutbound: true,
           });
           // Add ingress rules on the security group that has been created
-          mySG.addIngressRule(
-            ec2.Peer.ipv4('178.84.133.29/32'),
-            ec2.Port.tcp(22),
-            'Allow to SSH'
-          );
+          // mySG.addIngressRule(
+          //   ec2.Peer.ipv4('178.84.133.29/32'),
+          //   ec2.Port.tcp(22),
+          //   'Allow to SSH'
+          // );
 
         // Create an IAM role for the EC2 instance  
         const iamRole = new iam.Role(this, 'EC2-Role', {

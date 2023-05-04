@@ -20,7 +20,7 @@ export class PipelineStack extends Stack {
                 }
             ),
             // installCommands: ["npm install -g aws-cdk"],
-            commands: ["npm ci", "npm run build", "npx cdk synth"]
+            commands: ['yarn install --frozen-lockfile', 'npx projen build'],
         })
 
     });

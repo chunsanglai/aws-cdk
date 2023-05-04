@@ -9,6 +9,9 @@ import { Construct } from 'constructs';
 // Define an interface for the properties of the EC2Stack class
 interface EC2StackProps extends cdk.StackProps {
     readonly vpc: ec2.IVpc;
+    readonly instanceName: string;
+    readonly sizeInGb: number;
+    readonly instanceType: string;
 }
 
 // EC2Stack class extends the AWS CDK Stack class
@@ -55,13 +58,13 @@ export class EC2Stack extends cdk.Stack {
 
         // Create an EC2 instance with the specified configuration
         const instance = new ec2.Instance(this, "Instance", {
-            instanceName: 'APOS-Gateway',
-            instanceType: new ec2.InstanceType("t2.micro"), //t3x.large
+            instanceName: props.instanceName,
+            instanceType: new ec2.InstanceType(props.instanceType), //t3x.large
             machineImage: new ec2.WindowsImage(ec2.WindowsVersion.WINDOWS_SERVER_2019_ENGLISH_FULL_BASE),
             blockDevices: [
               {
                 deviceName: '/dev/xvda',
-                volume: ec2.BlockDeviceVolume.ebs(30, { encrypted: true }),
+                volume: ec2.BlockDeviceVolume.ebs(props.sizeInGb, { encrypted: true }),
               }
             ],
             vpc: importedVpc,
@@ -71,15 +74,15 @@ export class EC2Stack extends cdk.Stack {
             userData
           });
 
-        // Create an EBS volume for the EC2 instance
-        const volume = new ec2.Volume(this, "instanceVolume", {
-          availabilityZone: 'eu-central-1a',
-          size: Size.gibibytes(40),
-          encrypted: true,
-          volumeType: EbsDeviceVolumeType.GENERAL_PURPOSE_SSD_GP3
-        });
+        // // Create an EBS volume for the EC2 instance
+        // const volume = new ec2.Volume(this, "instanceVolume", {
+        //   availabilityZone: 'eu-central-1a',
+        //   size: Size.gibibytes(props.sizeInGb),
+        //   encrypted: true,
+        //   volumeType: EbsDeviceVolumeType.GENERAL_PURPOSE_SSD_GP3
+        // });
 
-        // Attach EBS volume to the EC2 instance
-        volume.grantAttachVolumeByResourceTag(instance.grantPrincipal, [instance]);
+        // // Attach EBS volume to the EC2 instance
+        // volume.grantAttachVolumeByResourceTag(instance.grantPrincipal, [instance]);
     }
 }

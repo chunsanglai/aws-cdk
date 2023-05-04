@@ -19,7 +19,6 @@ export class PipelineStack extends Stack {
                         "arn:aws:codestar-connections:eu-central-1:788527717058:connection/79110d73-a381-41db-9a36-d59e06d05adb"
                 }
             ),
-            // installCommands: ["npm install -g aws-cdk"],
             commands: ['yarn install --frozen-lockfile', 'npx projen build'],
         })
 

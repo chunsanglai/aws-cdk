@@ -1,40 +1,32 @@
 import { Construct } from 'constructs';
-import { CodeBuildStep, CodePipeline, CodePipelineSource } from 'aws-cdk-lib/pipelines';
+import { CodeBuildStep, CodePipelineSource } from 'aws-cdk-lib/pipelines';
+import * as cdkpipelines from 'aws-cdk-lib/pipelines';
 import { Stack, StackProps } from 'aws-cdk-lib';
-import { PipelineStage } from "./cdk-pipeline-stage";
 import variables from '../../bin/load-dotenv';
+import { PipelineStage } from './cdk-pipeline-stage';
 
 export class PipelineStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const pipeline = new CodePipeline(this, "cdkPipeline", {
-        pipelineName: "cdkPipeline",
+    const cdkPipeline = new cdkpipelines.CodePipeline(this, 'cdkPipeline', {
+        pipelineName: `${variables.CUSTOMER_NAME}-cdkPipeline`,
         synth: new CodeBuildStep("SynthStep", {
             input: CodePipelineSource.connection(
-                "chunsanglai/aws-cdk",
-                "main",
-                {
-                    connectionArn:
-                        "arn:aws:codestar-connections:eu-central-1:788527717058:connection/79110d73-a381-41db-9a36-d59e06d05adb"
-                }
+                `${variables.PIPELINE_GIT_OWNER}/${variables.PIPELINE_GIT_REPO}`,
+                variables.PIPELINE_BRANCH,
+                { connectionArn: variables.PIPELINE_CODESTAR_CONNECTION_ARN }
             ),
             commands: ['yarn install --frozen-lockfile', 'npx projen build'],
         })
-
     });
 
-    
-    const prodaccount = new PipelineStage(this, variables.PROD_AWS_ACCOUNT_STAGE, {
-        env: {
-          account: variables.PROD_AWS_ACCOUNT_ID,
-          region: variables.PROD_AWS_REGION,
-        },
-        stage: variables.PROD_AWS_ACCOUNT_STAGE,
-        stageShort: variables.PROD_AWS_ACCOUNT_STAGE_SHORT,
-        vpcCidr: variables.PROD_VPC_CIDR,
-      });
+    const production = new PipelineStage(this, 'production', {
+      stage: variables.PROD_AWS_ACCOUNT_STAGE,
+      stageShort: variables.PROD_AWS_ACCOUNT_STAGE_SHORT,
+      vpcCidr: variables.PROD_VPC_CIDR,
+    });
 
-		pipeline.addStage(prodaccount);
+    cdkPipeline.addStage(production);
   }
 }

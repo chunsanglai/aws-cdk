@@ -19,7 +19,7 @@ export class VpcStack extends Stack {
     }
 
     this.vpc = new ec2.Vpc(this, 'skeletonVPC', {
-      cidr: props.vpcCidr,
+      ipAddresses: ec2.IpAddresses.cidr(`${props.vpcCidr}`),
       natGateways: 1,
       maxAzs: 3,
       subnetConfiguration: [

@@ -26,7 +26,7 @@ export class PipelineStage extends Stage {
 			vpcCidr: props.vpcCidr
 		  });
 		
-		new EC2Stack(this, 'ec2', {
+		new EC2Stack(this, stackName('ec2'), {
 			vpc: vpcStack.vpc,
 			instanceName: 'APOS-Gateway',
 			sizeInGb: 40,

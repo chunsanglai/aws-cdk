@@ -68,7 +68,7 @@ export class EC2Stack extends cdk.Stack {
               }
             ],
             vpc: importedVpc,
-            vpcSubnets: { subnetType: ec2.SubnetType.PUBLIC},
+            vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS},
             securityGroup: mySG,
             role: iamRole,
             userData

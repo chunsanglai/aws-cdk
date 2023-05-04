@@ -83,6 +83,7 @@ export class EC2Stack extends cdk.Stack {
         // });
 
         // // Attach EBS volume to the EC2 instance
+        
         // volume.grantAttachVolumeByResourceTag(instance.grantPrincipal, [instance]);
     }
 }

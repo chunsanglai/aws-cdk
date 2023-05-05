@@ -1,4 +1,4 @@
-import { Stage, StageProps } from "aws-cdk-lib";
+import { Fn, Stage, StageProps } from "aws-cdk-lib";
 import { Construct } from 'constructs';
 import { VpcStack } from '../01-skeleton/vpc-stack';
 import { R53Stack } from '../01-skeleton/r53-stack';
@@ -15,6 +15,8 @@ export interface CdkPipelineStageProps extends StageProps {
 export class PipelineStage extends Stage {
 	constructor(scope: Construct, id: string, props?: CdkPipelineStageProps) {
 		super(scope, id, props);
+
+		const privateHostedZoneId = Fn.importValue('PrivateHostedZoneID');
 
 		if (!(props && props.vpcCidr)) {
 			throw new Error("Supply a valid VPC Cidr for the account that you're deploying the stack on!");
@@ -37,7 +39,7 @@ export class PipelineStage extends Stage {
 			instanceName: 'APOS-Gateway',
 			sizeInGb: 40,
 			instanceType: "t2.micro",
-			privateHostedZone: r53Stack.privateHostedZone,
+			privateHostedZoneID: privateHostedZoneId ,
 		});
 	  
 	}

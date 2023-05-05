@@ -80,7 +80,7 @@ export class EC2Stack extends cdk.Stack {
 
           new route53.ARecord(this, 'InstanceARecord', {
             zone: privateHostedZone,
-            recordName: `ec2.${privateHostedZone.zoneName}`,
+            recordName: instance.instancePrivateDnsName,
             target: route53.RecordTarget.fromIpAddresses(instance.instancePrivateIp),
           });
 

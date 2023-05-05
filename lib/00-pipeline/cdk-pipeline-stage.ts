@@ -3,7 +3,7 @@ import { Construct } from 'constructs';
 import { VpcStack } from '../01-skeleton/vpc-stack';
 import { R53Stack } from '../01-skeleton/r53-stack';
 import stackName from "../../bin/name-stacks";
-// import { EC2Stack } from "../02-compute";
+import { EC2Stack } from "../02-compute";
 
 export interface CdkPipelineStageProps extends StageProps {
 	readonly stageShort?: string;
@@ -32,13 +32,13 @@ export class PipelineStage extends Stage {
 			vpcStack: vpcStack
 		  });
 		
-		// new EC2Stack(this, stackName('ec2'), {
-		// 	vpc: vpcStack.vpc,
-		// 	instanceName: 'APOS-Gateway',
-		// 	sizeInGb: 40,
-		// 	instanceType: "t2.micro",
-
-		// });
+		new EC2Stack(this, stackName('ec2'), {
+			vpc: vpcStack.vpc,
+			instanceName: 'APOS-Gateway',
+			sizeInGb: 40,
+			instanceType: "t2.micro",
+			privateHostedZone: R53Stack.privateHostedZone,
+		});
 	  
 	}
 }

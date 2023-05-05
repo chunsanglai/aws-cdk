@@ -17,6 +17,7 @@ interface R53StackProps extends StackProps {
 
 export class R53Stack extends Stack {
   public readonly subzone: route53.PublicHostedZone;
+	static privateHostedZone: PrivateHostedZone;
   constructor(scope: Construct, id: string, props: R53StackProps) {
     super(scope, id, props);
 

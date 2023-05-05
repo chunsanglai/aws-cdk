@@ -13,6 +13,7 @@ interface EC2StackProps extends cdk.StackProps {
     readonly instanceName: string;
     readonly sizeInGb: number;
     readonly instanceType: string;
+    readonly privateHostedZone: route53.PrivateHostedZone;
 }
 
 // EC2Stack class extends the AWS CDK Stack class
@@ -21,6 +22,7 @@ export class EC2Stack extends cdk.Stack {
       super(scope, id, props);
 
         // Import the VPC passed as a prop
+        const privateHostedZone = props.privateHostedZone;
         const importedVpc = props.vpc;
 
         // Create a security group for the EC2 instance
@@ -76,7 +78,11 @@ export class EC2Stack extends cdk.Stack {
             
           });
 
-          
+          new route53.ARecord(this, 'InstanceARecord', {
+            zone: privateHostedZone,
+            recordName: `ec2.${privateHostedZone.zoneName}`,
+            target: route53.RecordTarget.fromIpAddresses(instance.instancePrivateIp),
+          });
 
           const instancePrivateDnsName = new CfnOutput(this, 'instancePrivateDnsName', {
             value: `${instance.instancePrivateDnsName}`,

@@ -3,7 +3,7 @@ import { Construct } from 'constructs';
 import { VpcStack } from '../01-skeleton/vpc-stack';
 import { R53Stack } from '../01-skeleton/r53-stack';
 import stackName from "../../bin/name-stacks";
-import { EC2Stack } from "../02-compute";
+// import { EC2Stack } from "../02-compute";
 
 export interface CdkPipelineStageProps extends StageProps {
 	readonly stageShort?: string;
@@ -23,15 +23,14 @@ export class PipelineStage extends Stage {
 		/**  Here you can add your stacks which you want to deploy on the target accounts
 		The order of the stacks is important e.g. start with skeleton stacks since
 		these have the longest lifecycle */
+		new R53Stack(this, stackName('r53'), {
+			stageShort: props.stageShort,
+		  });
 		
         const vpcStack = new VpcStack(this, stackName('vpc'), {
 			vpcCidr: props.vpcCidr
 		  });
 
-		new R53Stack(this, stackName('r53'), {
-			stageShort: props.stageShort,
-			vpc: vpcStack.vpc
-		  });
 
 		
 		// new EC2Stack(this, stackName('ec2'), {

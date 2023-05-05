@@ -1,9 +1,7 @@
 // Import required modules from AWS CDK library
 import * as cdk from 'aws-cdk-lib';
-import { CfnOutput, Size } from 'aws-cdk-lib';
-import * as route53 from 'aws-cdk-lib/aws-route53';
+import { CfnOutput } from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
-import { EbsDeviceVolumeType } from 'aws-cdk-lib/aws-ec2';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
@@ -13,8 +11,6 @@ interface EC2StackProps extends cdk.StackProps {
     readonly instanceName: string;
     readonly sizeInGb: number;
     readonly instanceType: string;
-    readonly privateHostedZoneId: string;
-    readonly privateHostedZoneName: string;
 }
 
 // EC2Stack class extends the AWS CDK Stack class
@@ -22,13 +18,6 @@ export class EC2Stack extends cdk.Stack {
     constructor(scope: Construct, id: string, props: EC2StackProps) {
       super(scope, id, props);
 
-        // Import the VPC passed as a prop
-        const privateHostedZoneId = props.privateHostedZoneId;
-        const privateHostedZoneName = props.privateHostedZoneName;
-        const privateHostedZone = route53.HostedZone.fromHostedZoneAttributes(this, 'ImportedPrivateHostedZone', {
-          hostedZoneId: privateHostedZoneId,
-          zoneName: privateHostedZoneName,
-        });
         const importedVpc = props.vpc;
 
         // Create a security group for the EC2 instance
@@ -82,12 +71,6 @@ export class EC2Stack extends cdk.Stack {
             role: iamRole,
             userData,
             
-          });
-
-          new route53.ARecord(this, 'InstanceARecord', {
-            zone: privateHostedZone,
-            recordName: instance.instancePrivateDnsName,
-            target: route53.RecordTarget.fromIpAddresses(instance.instancePrivateIp),
           });
 
           const instancePrivateDnsName = new CfnOutput(this, 'instancePrivateDnsName', {

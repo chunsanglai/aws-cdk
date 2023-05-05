@@ -27,7 +27,7 @@ export class PipelineStage extends Stage {
 			vpcCidr: props.vpcCidr
 		  });
 
-		new R53Stack(this, stackName('r53'), {
+		const r53Stack = new R53Stack(this, stackName('r53'), {
 			stageShort: props.stageShort,
 			vpcStack: vpcStack
 		  });
@@ -37,7 +37,7 @@ export class PipelineStage extends Stage {
 			instanceName: 'APOS-Gateway',
 			sizeInGb: 40,
 			instanceType: "t2.micro",
-			privateHostedZone: R53Stack.privateHostedZone,
+			privateHostedZone: r53Stack.privateHostedZone,
 		});
 	  
 	}

@@ -17,7 +17,8 @@ interface R53StackProps extends StackProps {
 
 export class R53Stack extends Stack {
   public readonly subzone: route53.PublicHostedZone;
-	static privateHostedZone: PrivateHostedZone;
+  public readonly privateHostedZone: route53.PrivateHostedZone;
+	
   constructor(scope: Construct, id: string, props: R53StackProps) {
     super(scope, id, props);
 
@@ -27,7 +28,7 @@ export class R53Stack extends Stack {
       zoneName: `${props?.stageShort}.${variables.CUSTOMER_NAME}`,
     });
 
-    const zone = new route53.PrivateHostedZone(this, 'HostedZone', {
+    const privateHostedZone = new route53.PrivateHostedZone(this, 'HostedZone', {
       zoneName: `${props?.stageShort}.${variables.CUSTOMER_NAME}.internal`,
       vpc,    // At least one VPC has to be added to a Private Hosted Zone.
     });
@@ -39,7 +40,7 @@ export class R53Stack extends Stack {
     });
 
     new CfnOutput(this, 'PrivateHostedZoneID', {
-      value: zone.hostedZoneId,
+      value: privateHostedZone.hostedZoneId,
       description: 'Private Hosted Zone ID',
       exportName: 'PrivateHostedZoneID',
     });

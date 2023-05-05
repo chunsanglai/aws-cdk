@@ -1,6 +1,6 @@
 // Import required modules from AWS CDK library
 import * as cdk from 'aws-cdk-lib';
-import { Size } from 'aws-cdk-lib';
+import { CfnOutput, Size } from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import { EbsDeviceVolumeType } from 'aws-cdk-lib/aws-ec2';
 import * as iam from 'aws-cdk-lib/aws-iam';
@@ -71,19 +71,19 @@ export class EC2Stack extends cdk.Stack {
             vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS},
             securityGroup: mySG,
             role: iamRole,
-            userData
+            userData,
+            
           });
 
-        // // Create an EBS volume for the EC2 instance
-        // const volume = new ec2.Volume(this, "instanceVolume", {
-        //   availabilityZone: 'eu-central-1a',
-        //   size: Size.gibibytes(props.sizeInGb),
-        //   encrypted: true,
-        //   volumeType: EbsDeviceVolumeType.GENERAL_PURPOSE_SSD_GP3
-        // });
+          const instancePrivateDnsName = new CfnOutput(this, 'instancePrivateDnsName', {
+            value: `${instance.instancePrivateDnsName}`,
+            description: "Private DNS name"
+          });
 
-        // // Attach EBS volume to the EC2 instance
-        //test
-        // volume.grantAttachVolumeByResourceTag(instance.grantPrincipal, [instance]);
+          const instanceId = new CfnOutput(this, 'instanceId', {
+            value: `${instance.instancePrivateDnsName}`,
+            description: "The instance's ID"
+          });
+          
     }
 }

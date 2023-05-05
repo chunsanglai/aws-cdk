@@ -1,6 +1,7 @@
 // Import required modules from AWS CDK library
 import * as cdk from 'aws-cdk-lib';
 import { CfnOutput, Size } from 'aws-cdk-lib';
+import * as route53 from 'aws-cdk-lib/aws-route53';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import { EbsDeviceVolumeType } from 'aws-cdk-lib/aws-ec2';
 import * as iam from 'aws-cdk-lib/aws-iam';
@@ -74,6 +75,8 @@ export class EC2Stack extends cdk.Stack {
             userData,
             
           });
+
+          
 
           const instancePrivateDnsName = new CfnOutput(this, 'instancePrivateDnsName', {
             value: `${instance.instancePrivateDnsName}`,

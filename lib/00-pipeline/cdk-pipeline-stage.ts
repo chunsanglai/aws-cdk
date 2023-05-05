@@ -23,20 +23,24 @@ export class PipelineStage extends Stage {
 		/**  Here you can add your stacks which you want to deploy on the target accounts
 		The order of the stacks is important e.g. start with skeleton stacks since
 		these have the longest lifecycle */
-		new R53Stack(this, stackName('r53'), {
-			stageShort: props.stageShort,
-		  });
-
+		
         const vpcStack = new VpcStack(this, stackName('vpc'), {
 			vpcCidr: props.vpcCidr
 		  });
+
+		new R53Stack(this, stackName('r53'), {
+			stageShort: props.stageShort,
+			vpc: vpcStack.vpc
+		  });
+
 		
-		new EC2Stack(this, stackName('ec2'), {
-			vpc: vpcStack.vpc,
-			instanceName: 'APOS-Gateway',
-			sizeInGb: 40,
-			instanceType: "t2.micro"
-		});
+		// new EC2Stack(this, stackName('ec2'), {
+		// 	vpc: vpcStack.vpc,
+		// 	instanceName: 'APOS-Gateway',
+		// 	sizeInGb: 40,
+		// 	instanceType: "t2.micro",
+
+		// });
 	  
 	}
 }

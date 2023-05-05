@@ -81,7 +81,7 @@ export class EC2Stack extends cdk.Stack {
           });
 
           const instanceId = new CfnOutput(this, 'instanceId', {
-            value: `${instance.instancePrivateDnsName}`,
+            value: `${instance.instanceId}`,
             description: "The instance's ID"
           });
           

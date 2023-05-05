@@ -17,6 +17,7 @@ export class PipelineStage extends Stage {
 		super(scope, id, props);
 
 		const privateHostedZoneId = Fn.importValue('PrivateHostedZoneID');
+		const privateHostedZoneName = Fn.importValue('PrivateHostedZoneName');
 
 		if (!(props && props.vpcCidr)) {
 			throw new Error("Supply a valid VPC Cidr for the account that you're deploying the stack on!");
@@ -39,7 +40,8 @@ export class PipelineStage extends Stage {
 			instanceName: 'APOS-Gateway',
 			sizeInGb: 40,
 			instanceType: "t2.micro",
-			privateHostedZoneID: privateHostedZoneId ,
+			privateHostedZoneId, // Pass the imported private hosted zone ID
+  			privateHostedZoneName, // Pass the imported private hosted zone name
 		});
 	  
 	}

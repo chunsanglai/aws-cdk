@@ -13,7 +13,8 @@ interface EC2StackProps extends cdk.StackProps {
     readonly instanceName: string;
     readonly sizeInGb: number;
     readonly instanceType: string;
-    readonly privateHostedZoneID: string;
+    readonly privateHostedZoneId: string;
+    readonly privateHostedZoneName: string;
 }
 
 // EC2Stack class extends the AWS CDK Stack class
@@ -22,8 +23,12 @@ export class EC2Stack extends cdk.Stack {
       super(scope, id, props);
 
         // Import the VPC passed as a prop
-        const privateHostedZoneId = props.privateHostedZoneID;
-        const privateHostedZone = route53.HostedZone.fromHostedZoneId(this, 'ImportedPrivateHostedZone', privateHostedZoneId);
+        const privateHostedZoneId = props.privateHostedZoneId;
+        const privateHostedZoneName = props.privateHostedZoneName;
+        const privateHostedZone = route53.HostedZone.fromHostedZoneAttributes(this, 'ImportedPrivateHostedZone', {
+          hostedZoneId: privateHostedZoneId,
+          zoneName: privateHostedZoneName,
+        });
         const importedVpc = props.vpc;
 
         // Create a security group for the EC2 instance

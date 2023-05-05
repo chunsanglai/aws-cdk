@@ -31,10 +31,16 @@ export class R53Stack extends Stack {
       vpc,    // At least one VPC has to be added to a Private Hosted Zone.
     });
 
-    new CfnOutput(this, 'HostedZoneId', {
+    new CfnOutput(this, 'PublicHostedZoneID', {
+      value: this.subzone.hostedZoneId,
+      description: 'Public Hosted Zone ID',
+      exportName: 'PublicHostedZoneID',
+    });
+
+    new CfnOutput(this, 'PrivateHostedZoneID', {
       value: zone.hostedZoneId,
-      description: 'Hosted Zone ID',
-      exportName: 'HostedZoneId',
+      description: 'Private Hosted Zone ID',
+      exportName: 'PrivateHostedZoneID',
     });
 
   }

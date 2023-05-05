@@ -46,6 +46,9 @@ export class VpcStack extends Stack {
         S3: {
           service: ec2.GatewayVpcEndpointAwsService.S3,
         },
+        DynamoDB: {
+          service: ec2.GatewayVpcEndpointAwsService.DYNAMODB
+        }
       }
     });
 
